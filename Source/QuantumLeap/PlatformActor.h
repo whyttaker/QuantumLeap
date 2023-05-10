@@ -15,6 +15,8 @@ class QUANTUMLEAP_API APlatformActor : public AActor
 public:	
 	// Sets default values for this actor's properties
 	APlatformActor();
+	AActor ConstructPlatform(float xpos, float time);
+	AActor ConstructWall(float xpos, float time);
 
 protected:
 	// Called when the game starts or when spawned

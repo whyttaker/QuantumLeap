@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <sstream>
 
 namespace osu
 {
@@ -76,25 +77,25 @@ namespace osu
 
         std::string toString() const
         {
-            std::string typestr = "";
-            switch (this->type)
+            std::string typeStr = "";
+            switch (type)
             {
             case HitObjectType::CIRCLE:
-                typestr = "CIRCLE";
+                typeStr = "CIRCLE";
                 break;
             case HitObjectType::SLIDER:
-                typestr = "SLIDER";
+                typeStr = "SLIDER";
                 break;
             case HitObjectType::SPINNER:
-                typestr = "SPINNER";
+                typeStr = "SPINNER";
                 break;
             }
 
-            return "Type: " + typestr + ", Time: " + std::to_string(time) + ", Length: " + std::to_string(length);
+            return "Type: " + typeStr + ", Time: " + std::to_string(time) + ", Length: " + std::to_string(length);
         }
     };
 
-    std::ostream &operator<<(std::ostream &os, const HitObject &obj)
+    std::ostream& operator<<(std::ostream& os, const HitObject& obj)
     {
         os << obj.toString();
         return os;
@@ -172,27 +173,27 @@ namespace osu
 
         int EndTime() const
         {
-            const HitObject &last = hitObjects.back();
+            const HitObject& last = hitObjects.back();
             return last.Time() + last.Length();
         }
 
-        const std::vector<HitObject> &
-        HitObjects() const
+        const std::vector<HitObject>&
+            HitObjects() const
         {
             return hitObjects;
         }
 
-        const std::string &AudioFilename() const
+        const std::string& AudioFilename() const
         {
             return audioFilename;
         }
 
-        const std::string &Title() const
+        const std::string& Title() const
         {
             return title;
         }
 
-        const std::string &Artist() const
+        const std::string& Artist() const
         {
             return artist;
         }
@@ -205,7 +206,7 @@ namespace osu
     private:
         void processOsuFile(std::string osufile)
         {
-            std::ifstream osu(osufile);
+            std::stringstream osu(osufile);
 
             std::vector<TimingPoint> timingPoints;
 
@@ -292,7 +293,7 @@ namespace osu
                     hitType = HitObjectType::SLIDER;
                     int length = stoi(args[7]);
                     int slides = stoi(args[6]);
-                    noteLength = length / (sliderMultiplier * 100 * sliderVelocity) * beatLength * slides;
+                    noteLength = int(length / (sliderMultiplier * 100 * sliderVelocity) * beatLength);
                 }
                 else if (type & 0b00001000)
                 {
@@ -338,7 +339,7 @@ namespace osu
         }
     };
 
-    std::ostream &operator<<(std::ostream &os, const Beatmap &song)
+    std::ostream& operator<<(std::ostream& os, const Beatmap& song)
     {
         os << "Title: " << song.Title() << std::endl;
         os << "Artist: " << song.Artist() << std::endl;
@@ -349,7 +350,7 @@ namespace osu
         int numCircles = 0;
         int numSliders = 0;
         int numSpinners = 0;
-        for (const HitObject &obj : song.HitObjects())
+        for (const HitObject& obj : song.HitObjects())
         {
             switch (obj.Type())
             {
