@@ -9,25 +9,24 @@
 #include "LevelGenerator.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class QUANTUMLEAP_API ULevelGenerator : public USceneComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attributes)
-		float PlatformYSpacing;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attributes)
-		float PlatformZSpacing;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attributes)
-		float WallSpacing;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attributes)
-		float NumberOfBeats;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attributes)
 		float walkSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		FString Name;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Attributes)
+		float zPos = 0;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Attributes)
+		float playerY = 0;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Attributes)
+		float jumpZVelocity = 0;
 	UPROPERTY(EditAnywhere, Category = "Music")
 		class USoundBase* Sound;
 
@@ -45,7 +44,7 @@ private:
 	AActor* ConstructWall(float xpos, int time, int length, int type);
 	void GeneratePlatforms();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	std::vector<AActor*> platforms;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio", meta = (AllowPrivateAccess = "true"))
 		UAudioComponent* MusicAudioComponent;

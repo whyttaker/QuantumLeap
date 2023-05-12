@@ -54,6 +54,7 @@ AActor* ULevelGenerator::ConstructPlatform(float xpos, int time){
 	platform->SetActorLocation(location);
 	
 	//location += FVector(xval, PlatformYSpacing + extent.Y / 2, PlatformZSpacing);
+	platforms.push_back(platform);
 	return platform;
 }
 
@@ -157,6 +158,7 @@ AActor* ULevelGenerator::ConstructWall(float xpos, int time, int length, int typ
 	platform->SetActorLocation(FVector(xpos, yPos, 0));
 
 	//location += FVector(xval, PlatformYSpacing + extent.Y / 2, PlatformZSpacing);
+	platforms.push_back(platform);
 	return platform;
 }
 
@@ -231,39 +233,85 @@ void ULevelGenerator::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 
 	bool audioplaying = false;
-	float audiotime = 0;
 
 	if (!audioplaying) {
 		audioplaying = true;
-	}
 
+		playerY = timer * walkSpeed;
 		int index = 0;
-		while (index < beats.HitObjects().size() - 1 && beats.HitObjects()[index + 1].Time() <= 1000 * audiotime) {
+		while (index < beats.HitObjects().size() - 1 && beats.HitObjects()[index + 1].Time() <= 1000 * timer) {
 			index++;
 		}
 		if (index < beats.HitObjects().size() - 1) {
-			float ypos = 0;
-			if (1000 * audiotime > beats.HitObjects()[0].Time() / 1000)
+			if (1000 * timer > beats.HitObjects()[0].Time() / 1000)
 			{
-				float currentSZ = beats.HitObjects()[index].Time() * timeMod;
-				float nextSZ = beats.HitObjects()[index + 1].Time() * timeMod;
-				float currentEZ = currentSZ + beats.HitObjects()[index].Length() * timeMod;
-				float nextEZ = nextSZ + beats.HitObjects()[index + 1].Length() * timeMod;
-				float currentZ = (currentEZ + currentSZ) / 2;
-				float nextZ = (nextEZ + nextSZ) / 2;
+				float currentSY = beats.HitObjects()[index].Time() * timeMod;
+				float nextSY = beats.HitObjects()[index + 1].Time() * timeMod;
+				float currentEY = currentSY + beats.HitObjects()[index].Length() * timeMod;
+				float nextEY = nextSY + beats.HitObjects()[index + 1].Length() * timeMod;
+				float currentY = (currentEY + currentSY) / 2;
+				float nextY = (nextEY + nextSY) / 2;
+
+				AActor* currentplatform = platforms[0];
+				AActor* nextplatform = platforms[0];
 
 
-				//FVector PlayerVelocity(0, 0, 0);
-				//FVector currentLocation(0, currentEZ, 0);
-				//FVector nextLocation(0, nextSZ, 0);
+				for (int i = 0; i < platforms.size(); i++) {
 
-				//bool check = UGameplayStatics::SuggestProjectileVelocity(this, PlayerVelocity, currentLocation, nextLocation, walkSpeed);
+					if (FMath::Abs(platforms[i]->GetActorLocation().Y - currentY) < 0.01f) {
+						currentplatform = platforms[i];
+					}
+					else if (FMath::Abs(platforms[i]->GetActorLocation().Y - nextY) < 0.01f) {
+						nextplatform = platforms[i];
+						break;
+					}
+				}
 
-				//UE_LOG(LogTemp, Warning, TEXT("The float value is!!!!!!: %b"), check);
+				FVector startPos = currentplatform->GetActorLocation();
+				FVector endPos = nextplatform->GetActorLocation();
 
+				float distance = endPos.Y - startPos.Y;
+				float pY = (timer * walkSpeed) - startPos.Y;
+
+
+				float grav = 5;
+
+
+				jumpZVelocity = grav * (distance / (2 * timeMod));
+
+
+
+
+
+
+
+				/*if (pY > 0 && pY < distance)
+				{
+					float half = distance / 2;
+					float grav = -0.01f;
+					float halfZ = 0.5f * grav * (half * half - distance * half);
+					if (halfZ > 1000)
+					{
+						grav = 1000 / (0.5f * (half * half - distance * half));
+					}
+
+					zPos = 0.5f * grav * (pY * pY - distance * pY);
+					UE_LOG(LogTemp, Warning, TEXT("The float value is: %f"), zPos);
+				}*/
 			}
-		}
 
+			//FVector PlayerVelocity(0, 0, 0);
+			//FVector currentLocation(0, currentEZ, 0);
+			//FVector nextLocation(0, nextSZ, 0);
+
+			//bool check = UGameplayStatics::SuggestProjectileVelocity(this, PlayerVelocity, currentLocation, nextLocation, walkSpeed);
+
+			//UE_LOG(LogTemp, Warning, TEXT("The float value is!!!!!!: %b"), check);
+
+		}
+	}
 }
+
+
 
 
