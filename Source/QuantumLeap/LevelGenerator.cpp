@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "LevelGenerator.h"
 #include "osu.hpp"
 #include "PlatformActor.h"
@@ -8,15 +7,10 @@
 #include "spinner.h"
 #include "memphis.hpp"
 #include "ToU.hpp"
-#include "Kismet/GameplayStatics.h"/*
+#include "Kismet/GameplayStatics.h" /*
 #include "Sound/SoundCue.h"
 #include "Sound/Soundbase.h"
 #include "Components/AudioComponent.h"*/
-
-
-
-
-
 
 // Sets default values for this component's properties
 ULevelGenerator::ULevelGenerator()
@@ -24,167 +18,157 @@ ULevelGenerator::ULevelGenerator()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
 	// ...
 }
 
-AActor* ULevelGenerator::ConstructPlatform(float xpos, int time){
-	//UE_LOG(LogTemp, Warning, TEXT("The float value is: %d"), time);
+AActor *ULevelGenerator::ConstructPlatform(float xpos, int time)
+{
+	// UE_LOG(LogTemp, Warning, TEXT("The float value is: %d"), time);
 	FVector zerovec(0, 0, 0);
 
-	//spawning platform in
-	APlatformActor* platform = (APlatformActor*)GetWorld()->SpawnActor(APlatformActor::StaticClass(), &zerovec);
+	// spawning platform in
+	APlatformActor *platform = (APlatformActor *)GetWorld()->SpawnActor(APlatformActor::StaticClass(), &zerovec);
 
-	//setting scale
+	// setting scale
 	FVector scale(1.0f, 1.0f, 1.0f);
 	platform->SetActorScale3D(scale);
 
-	//setting xval (how far left and right to jump)
+	// setting xval (how far left and right to jump)
 	/*float xval = FMath::FRandRange(-200, 200);*/
-
-	//get bounds
+	platform->Tags.Add("Platform");
+	// get bounds
 	FVector origin;
 	FVector extent;
 	platform->GetActorBounds(false, origin, extent);
+	platformYSpacing = extent.Y / 2;
 
-
-	
-	//set location in world
-	FVector location(xpos, time, 0);
+	// set location in world
+	FVector location(xpos, time, -extent.Z / 2 + 0.001f);
 	platform->SetActorLocation(location);
-	
-	//location += FVector(xval, PlatformYSpacing + extent.Y / 2, PlatformZSpacing);
+
+	// location += FVector(xval, PlatformYSpacing + extent.Y / 2, PlatformZSpacing);
 	platforms.push_back(platform);
 	return platform;
 }
 
-
-
-AActor* ULevelGenerator::ConstructWall(float xpos, int time, int length, int type) {
+AActor *ULevelGenerator::ConstructWall(float xpos, int time, int length, int type)
+{
 	using namespace osu;
-	//UE_LOG(LogTemp, Warning, TEXT("wall length: %d"), length);
+	// UE_LOG(LogTemp, Warning, TEXT("wall length: %d"), length);
 	FVector zerovec(0, 0, 0);
 
-	//spawning platform in
-	AActor* platform;
-	if (type == 0) {
-		platform = (Aspinner*)GetWorld()->SpawnActor(Aspinner::StaticClass(), &zerovec);
+	// spawning platform in
+	AActor *platform;
+	if (type == 0)
+	{
+		platform = (Aspinner *)GetWorld()->SpawnActor(Aspinner::StaticClass(), &zerovec);
 		UE_LOG(LogTemp, Warning, TEXT("spinner wall length: %d"), length);
 		float startY = time * timeMod;
 
-		//end of the wall
+		// end of the wall
 		float endY = startY + length * timeMod;
 
-		//middle of the wall (used for location)
+		// middle of the wall (used for location)
 		float yPos = (startY + endY) / 2;
 
-		//how long the wall is (used for scaling the wall)
+		// how long the wall is (used for scaling the wall)
 		float wallLength = endY - startY;
 
-		//get bounds
+		// get bounds
 		FVector origin;
 		FVector extent;
 		platform->GetActorBounds(false, origin, extent);
 
-		//UE_LOG(LogTemp, Warning, TEXT("wall length: %f"), wallLength);
-		//UE_LOG(LogTemp, Warning, TEXT("wall extent y: %f"), extent.Y);
-		UE_LOG(LogTemp, Warning, TEXT("spinner wall len / extent y: %f"), (wallLength/extent.X));
-		FVector scale(1.0f, wallLength*0.5f / extent.Y, 1.0f);
+		// UE_LOG(LogTemp, Warning, TEXT("wall length: %f"), wallLength);
+		// UE_LOG(LogTemp, Warning, TEXT("wall extent y: %f"), extent.Y);
+		UE_LOG(LogTemp, Warning, TEXT("spinner wall len / extent y: %f"), (wallLength / extent.X));
+		FVector scale(1.0f, wallLength * 0.5f / extent.Y, 1.0f);
 		platform->SetActorRelativeScale3D(scale);
 	}
-	else {
-		platform = (AWallActor*)GetWorld()->SpawnActor(AWallActor::StaticClass(), &zerovec);
+	else
+	{
+		platform = (AWallActor *)GetWorld()->SpawnActor(AWallActor::StaticClass(), &zerovec);
 
 		UE_LOG(LogTemp, Warning, TEXT("slider wall length: %d"), length);
 		float startY = time * timeMod;
 
-		//end of the wall
+		// end of the wall
 		float endY = startY + length * timeMod;
 
-		//middle of the wall (used for location)
+		// middle of the wall (used for location)
 		float yPos = (startY + endY) / 2;
 
-		//how long the wall is (used for scaling the wall)
+		// how long the wall is (used for scaling the wall)
 		float wallLength = endY - startY;
 
-		//get bounds
+		// get bounds
 		FVector origin;
 		FVector extent;
 		platform->GetActorBounds(false, origin, extent);
 
-		//UE_LOG(LogTemp, Warning, TEXT("wall length: %f"), wallLength);
-		//UE_LOG(LogTemp, Warning, TEXT("wall extent y: %f"), extent.Y);
+		// UE_LOG(LogTemp, Warning, TEXT("wall length: %f"), wallLength);
+		// UE_LOG(LogTemp, Warning, TEXT("wall extent y: %f"), extent.Y);
 		UE_LOG(LogTemp, Warning, TEXT("slider len / extent y: %f"), (wallLength / extent.Y));
 		FVector scale(1.0f, wallLength * 0.5f / extent.Y, 1.0f);
 		platform->SetActorRelativeScale3D(scale);
-		
 	}
-	
+	platform->Tags.Add("Wall");
 
-	//start of the wall
+	// start of the wall
 	float startY = time * timeMod;
 
-	//end of the wall
+	// end of the wall
 	float endY = startY + length * timeMod;
 
-	//middle of the wall (used for location)
+	// middle of the wall (used for location)
 	float yPos = (startY + endY) / 2;
 
-	//how long the wall is (used for scaling the wall)
+	// how long the wall is (used for scaling the wall)
 	float wallLength = endY - startY;
 
-	//get bounds
+	// get bounds
 	FVector origin;
 	FVector extent;
 	platform->GetActorBounds(false, origin, extent);
 
-	//UE_LOG(LogTemp, Warning, TEXT("wall length: %f"), wallLength);
-	//UE_LOG(LogTemp, Warning, TEXT("wall extent y: %f"), extent.Y);
-	//UE_LOG(LogTemp, Warning, TEXT("wall len / extent y: %f"), (wallLength/extent.Y));
-	//setting scale
-	
+	// UE_LOG(LogTemp, Warning, TEXT("wall length: %f"), wallLength);
+	// UE_LOG(LogTemp, Warning, TEXT("wall extent y: %f"), extent.Y);
+	// UE_LOG(LogTemp, Warning, TEXT("wall len / extent y: %f"), (wallLength/extent.Y));
+	// setting scale
 
+	// setting xval (how far left and right to jump)
+	// float xval = FMath::FRandRange(-200, 200);
 
-	
-
-	//setting xval (how far left and right to jump)
-	//float xval = FMath::FRandRange(-200, 200);
-
-	
-
-
-
-	//set location in world
+	// set location in world
 	platform->SetActorLocation(FVector(xpos, yPos, 0));
 
-	//location += FVector(xval, PlatformYSpacing + extent.Y / 2, PlatformZSpacing);
+	// location += FVector(xval, PlatformYSpacing + extent.Y / 2, PlatformZSpacing);
 	platforms.push_back(platform);
 	return platform;
 }
 
-
-
-void ULevelGenerator::GeneratePlatforms() {
+void ULevelGenerator::GeneratePlatforms()
+{
 	using namespace osu;
 	Beatmap beats(ToU);
 	int count = 1;
-	for (const auto& hitobj : beats.HitObjects())
+	for (const auto &hitobj : beats.HitObjects())
 	{
 
-		//UE_LOG(LogTemp, Warning, TEXT("Hello"));
-		//UE_LOG(LogTemp, Warning, TEXT("The float value is: %d"), hitobj.Time());
+		// UE_LOG(LogTemp, Warning, TEXT("Hello"));
+		// UE_LOG(LogTemp, Warning, TEXT("The float value is: %d"), hitobj.Time());
 
-		
 		float xpos = FMath::Sin(hitobj.Time() / 100.0f);
-		
-		if (hitobj.Type() == HitObjectType::CIRCLE) 
+
+		if (hitobj.Type() == HitObjectType::CIRCLE)
 		{
 			ConstructPlatform(2 * xpos, hitobj.Time() * timeMod);
 		}
 		else
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("The float value is!!!!!!: %d"), hitobj.Length());
-			if (hitobj.Type() == HitObjectType::SPINNER) {
+			// UE_LOG(LogTemp, Warning, TEXT("The float value is!!!!!!: %d"), hitobj.Length());
+			if (hitobj.Type() == HitObjectType::SPINNER)
+			{
 				UE_LOG(LogTemp, Warning, TEXT("count: %d"), count);
 				ConstructWall(2.5 * xpos, hitobj.Time(), hitobj.Length(), 0);
 				count++;
@@ -193,57 +177,49 @@ void ULevelGenerator::GeneratePlatforms() {
 			{
 				ConstructWall(2.5 * xpos, hitobj.Time(), hitobj.Length(), 1);
 			}
-			
-			
 		}
-		
 	}
 }
-
 
 // Called when the game starts
 void ULevelGenerator::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//play music from specified path
+	// play music from specified path
 	Sound = LoadObject<USoundBase>(NULL, TEXT("/Game/Songs/NeverGetUsedToPeople"));
-	UGameplayStatics::PlaySound2D(this, Sound);
 
-	timeMod = 2;
-	
+	timeMod = walkSpeed / 1000.0f;
 
 	GeneratePlatforms();
-
+	// UGameplayStatics::PlaySound2D(this, Sound);
+	timer = 0;
 }
 
-
-
-
-
 // Called every frame
-void ULevelGenerator::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void ULevelGenerator::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	timer += DeltaTime;
-	//UE_LOG(LogTemp, Warning, TEXT("time = %f"), timer);
+	// UE_LOG(LogTemp, Warning, TEXT("time = %f"), timer);
 	using namespace osu;
 	Beatmap beats(ToU);
 
-
-
 	bool audioplaying = false;
 
-	if (!audioplaying) {
+	if (!audioplaying)
+	{
 		audioplaying = true;
 
 		playerY = timer * walkSpeed;
 		int index = 0;
-		while (index < beats.HitObjects().size() - 1 && beats.HitObjects()[index + 1].Time() <= 1000 * timer) {
+		while (index < beats.HitObjects().size() - 1 && beats.HitObjects()[index + 1].Time() <= 1000 * timer)
+		{
 			index++;
 		}
-		if (index < beats.HitObjects().size() - 1) {
-			if (1000 * timer > beats.HitObjects()[0].Time() / 1000)
+		if (index < beats.HitObjects().size() - 1)
+		{
+			if (1000 * timer > beats.HitObjects()[0].Time())
 			{
 				float currentSY = beats.HitObjects()[index].Time() * timeMod;
 				float nextSY = beats.HitObjects()[index + 1].Time() * timeMod;
@@ -252,66 +228,58 @@ void ULevelGenerator::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 				float currentY = (currentEY + currentSY) / 2;
 				float nextY = (nextEY + nextSY) / 2;
 
-				AActor* currentplatform = platforms[0];
-				AActor* nextplatform = platforms[0];
+				float startPos = currentEY;
+				float endPos = nextSY;
 
+				float distance = endPos - startPos;
+				float pY = (timer * walkSpeed) - startPos;
 
-				for (int i = 0; i < platforms.size(); i++) {
+				float grav = -980;
 
-					if (FMath::Abs(platforms[i]->GetActorLocation().Y - currentY) < 0.01f) {
-						currentplatform = platforms[i];
-					}
-					else if (FMath::Abs(platforms[i]->GetActorLocation().Y - nextY) < 0.01f) {
-						nextplatform = platforms[i];
-						break;
-					}
-				}
+				jumpZVelocity = -grav * distance / 4 / 1000;
 
-				FVector startPos = currentplatform->GetActorLocation();
-				FVector endPos = nextplatform->GetActorLocation();
-
-				float distance = endPos.Y - startPos.Y;
-				float pY = (timer * walkSpeed) - startPos.Y;
-
-
-				float grav = 5;
-
-
-				jumpZVelocity = grav * (distance / (2 * timeMod));
-
-
-
-
-
-
-
-				/*if (pY > 0 && pY < distance)
+				if (pY > 0 && pY < distance)
 				{
-					float half = distance / 2;
-					float grav = -0.01f;
-					float halfZ = 0.5f * grav * (half * half - distance * half);
-					if (halfZ > 1000)
-					{
-						grav = 1000 / (0.5f * (half * half - distance * half));
-					}
+					// float half = distance / 2;
+					// float grav = -0.01f;
+					// float halfZ = 0.5f * grav * (half * half - distance * half);
+					// if (halfZ > 1000)
+					// {
+					// 	grav = 1000 / (0.5f * (half * half - distance * half));
+					// }
 
-					zPos = 0.5f * grav * (pY * pY - distance * pY);
-					UE_LOG(LogTemp, Warning, TEXT("The float value is: %f"), zPos);
-				}*/
+					zPos = grav * (pY * pY - distance * pY) / 1000000;
+					UE_LOG(LogTemp, Warning, TEXT("zPos = %f, pY = %f, distance = %f"), zPos, pY, distance);
+
+					FVector zerovec(0, 0, 0);
+
+					// spawning platform in
+					APlatformActor *platform = (APlatformActor *)GetWorld()->SpawnActor(APlatformActor::StaticClass(), &zerovec);
+
+					// setting scale
+					FVector scale(0.1f, 0.1f, 0.1f);
+					platform->SetActorScale3D(scale);
+
+					// setting xval (how far left and right to jump)
+					/*float xval = FMath::FRandRange(-200, 200);*/
+					// get bounds
+					FVector origin;
+					FVector extent;
+					platform->GetActorBounds(false, origin, extent);
+					platformYSpacing = extent.Y / 2;
+
+					// set location in world
+					platform->SetActorLocation({platformYSpacing, timer * walkSpeed, zPos});
+				}
 			}
 
-			//FVector PlayerVelocity(0, 0, 0);
-			//FVector currentLocation(0, currentEZ, 0);
-			//FVector nextLocation(0, nextSZ, 0);
+			// FVector PlayerVelocity(0, 0, 0);
+			// FVector currentLocation(0, currentEZ, 0);
+			// FVector nextLocation(0, nextSZ, 0);
 
-			//bool check = UGameplayStatics::SuggestProjectileVelocity(this, PlayerVelocity, currentLocation, nextLocation, walkSpeed);
+			// bool check = UGameplayStatics::SuggestProjectileVelocity(this, PlayerVelocity, currentLocation, nextLocation, walkSpeed);
 
-			//UE_LOG(LogTemp, Warning, TEXT("The float value is!!!!!!: %b"), check);
-
+			// UE_LOG(LogTemp, Warning, TEXT("The float value is!!!!!!: %b"), check);
 		}
 	}
 }
-
-
-
-
