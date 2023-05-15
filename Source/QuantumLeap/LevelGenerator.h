@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-// #include "osu.hpp"
+//#include "osu.hpp"
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
 #include "Components/AudioComponent.h"
@@ -28,6 +28,8 @@ public:
 	float jumpZVelocity = 0;
 	UPROPERTY(EditAnywhere, Category = "Music")
 	class USoundBase *Sound;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Attributes)
+	bool jump = false;
 
 	ULevelGenerator();
 
@@ -45,7 +47,7 @@ private:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 	std::vector<AActor *> platforms;
 	float platformYSpacing = 0;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio", meta = (AllowPrivateAccess = "true"))
 	UAudioComponent *MusicAudioComponent;
+	bool left = false;
 };
