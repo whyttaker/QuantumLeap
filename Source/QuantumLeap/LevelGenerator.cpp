@@ -7,6 +7,7 @@
 #include "WallActor.h"
 #include "spinner.h"
 #include "memphis.hpp"
+#include "OnlineSessionSettings.h"
 
 #include "Kismet/GameplayStatics.h" /*
 #include "Sound/SoundCue.h"
@@ -21,6 +22,18 @@ ULevelGenerator::ULevelGenerator()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 	// ...
+	IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
+	/*if (OnlineSubsystem) {
+		OnlineSessionInterface = OnlineSubsystem->GetSessionInterface();
+		if (GEngine) {
+			GEngine->AddOnScreenDebugMessage(
+				-1,
+				15.f,
+				FColor::Blue,
+				FString::Printf(TEXT("Found subsystem"))
+			);
+		}
+	}*/
 }
 
 AActor *ULevelGenerator::ConstructPlatform(float xpos, int time)

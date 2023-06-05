@@ -6,6 +6,8 @@
 #include "Components/SceneComponent.h"
 #include "Components/AudioComponent.h"
 #include "Sound/SoundCue.h"
+#include "OnlineSubsystem.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "LevelGenerator.generated.h"
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -32,6 +34,8 @@ public:
 	bool jump = false;
 
 	ULevelGenerator();
+
+	IOnlineSessionPtr OnlineSessionInterface;
 
 protected:
 	// Called when the game starts
