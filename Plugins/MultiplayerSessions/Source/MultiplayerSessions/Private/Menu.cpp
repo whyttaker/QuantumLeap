@@ -173,6 +173,7 @@ void UMenu::JoinButtonClicked()
 	if (MultiplayerSessionsSubsystem) {
 		MultiplayerSessionsSubsystem->FindSessions(100);
 	}
+	MenuTearDown();
 }
 
 void UMenu::MenuTearDown()
