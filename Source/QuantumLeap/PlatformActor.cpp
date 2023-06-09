@@ -13,7 +13,7 @@ APlatformActor::APlatformActor()
 	VisualMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(VisualMesh);
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> AsteroidVisualAsset(TEXT("/Game/Models/PrototypePlatform"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> AsteroidVisualAsset(TEXT("/Game/Models/GlowPlatform"));
 
 	if (AsteroidVisualAsset.Succeeded())
 	{

@@ -12,7 +12,7 @@ AWallActor::AWallActor()
 	VisualMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(VisualMesh);
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> AsteroidVisualAsset(TEXT("/Game/Models/Wall"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> AsteroidVisualAsset(TEXT("/Game/Models/GlowWall"));
 
 	if (AsteroidVisualAsset.Succeeded())
 	{
