@@ -16,7 +16,7 @@ class MULTIPLAYERSESSIONS_API UMenu : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintCallable) void MenuSetup(int32 NumberPublicConnections = 4, FString TypeOfMatch = FString(TEXT("Duel")), FString LobbyPath = FString("/Game/FirstPerson/Maps/WaitRoom"));
+	UFUNCTION(BlueprintCallable) void MenuSetup(int32 NumberPublicConnections = 2, FString TypeOfMatch = FString(TEXT("Duel")), FString LobbyPath = FString("/Game/FirstPerson/Maps/FirstPersonMap"));
 
 protected:
 	virtual bool Initialize() override;
@@ -24,30 +24,30 @@ protected:
 	//Prev func Deprecated OnLevelRemovedFromWorld()
 	virtual void NativeDestruct() override;
 
-	UFUNCTION() void OnCreateSession(bool bWasSuccessful);
+	/*UFUNCTION() void OnCreateSession(bool bWasSuccessful);
 	void OnFindSessions(const TArray<FOnlineSessionSearchResult>& SessionResults, bool bWasSuccessful);
 	void OnJoinSession(EOnJoinSessionCompleteResult::Type Result);
 	UFUNCTION() void OnDestroySession(bool bWasSuccessful);
-	UFUNCTION() void onStartSession(bool bWasSuccessful);
+	UFUNCTION() void onStartSession(bool bWasSuccessful);*/
 
 private:
 	UPROPERTY(meta = (BindWidget))
-	class UButton* HostButton;
+	class UButton* Multiplayer;
 
 	UPROPERTY(meta = (BindWidget))
-	class UButton* JoinButton;
+	class UButton* Singleplayer;
 
 	UFUNCTION()
-	void HostButtonClicked();
+	void MultiplayerClicked();
 
 	UFUNCTION()
-	void JoinButtonClicked();
+	void SingleplayerClicked();
 
 	void MenuTearDown();
 
-	class UMultiplayerSessionSubsystem* MultiplayerSessionsSubsystem;
+	//class UMultiplayerSessionSubsystem* MultiplayerSessionsSubsystem;
 
-	int32 NumPublicConnections{ 4 };
+	int32 NumPublicConnections{ 2 };
 	FString MatchType{ TEXT("Duel") };
 	FString PathToLobby{ TEXT("") };
 };
