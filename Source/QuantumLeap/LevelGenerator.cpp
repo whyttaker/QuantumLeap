@@ -210,7 +210,7 @@ void ULevelGenerator::BeginPlay()
 
 	timeMod = walkSpeed / 1000.0f;
 	GeneratePlatforms();
-	UGameplayStatics::PlaySound2D(this, Sound);
+	//UGameplayStatics::PlaySound2D(this, Sound);
 	timer = 0;
 }
 
