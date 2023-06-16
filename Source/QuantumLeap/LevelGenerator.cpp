@@ -181,7 +181,7 @@ void ULevelGenerator::GeneratePlatforms()
 		float wallxpos = 250;
 		if (hitobj.Type() == HitObjectType::CIRCLE)
 		{
-			ConstructPlatform(2 * xpos, hitobj.Time() * timeMod);
+			ConstructPlatform(100 * xpos, hitobj.Time() * timeMod);
 		}
 		else
 		{
