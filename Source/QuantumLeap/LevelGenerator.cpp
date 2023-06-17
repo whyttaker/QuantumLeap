@@ -96,9 +96,9 @@ AActor *ULevelGenerator::ConstructWall(float xpos, int time, int length, int typ
 
 		// UE_LOG(LogTemp, Warning, TEXT("wall length: %f"), wallLength);
 		// UE_LOG(LogTemp, Warning, TEXT("wall extent y: %f"), extent.Y);
-		UE_LOG(LogTemp, Warning, TEXT("spinner wall len / extent y: %f"), (wallLength / extent.X));
 		FVector scale(1.0f, wallLength * 0.5f / extent.Y, 4.0f);
 		platform->SetActorRelativeScale3D(scale);
+		platform->Tags.Add("Wall");
 	}
 	else
 	{
@@ -126,6 +126,7 @@ AActor *ULevelGenerator::ConstructWall(float xpos, int time, int length, int typ
 		// UE_LOG(LogTemp, Warning, TEXT("slider len / extent y: %f"), (wallLength / extent.Y));
 		FVector scale(1.0f, wallLength * 0.5f / extent.Y, 4.0f);
 		platform->SetActorRelativeScale3D(scale);
+		platform->Tags.Add("Wall");
 	}
 	platform->Tags.Add("Wall");
 
