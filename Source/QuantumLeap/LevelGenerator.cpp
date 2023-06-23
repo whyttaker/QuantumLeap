@@ -3,21 +3,27 @@
 #include "LevelGenerator.h"
 #include "osu.hpp"
 #include "ToU.hpp"
+#include "memphis.hpp"
+#include "loveletters.hpp"
+#include "overthinker.hpp"
+#include "supersonic.hpp"
 #include "PlatformActor.h"
 #include "WallActor.h"
 #include "spinner.h"
-#include "memphis.hpp"
+#include "helix.hpp"
 #include "OnlineSessionSettings.h"
-
+#include "Math/UnrealMathUtility.h"
 #include "Kismet/GameplayStatics.h" /*
 #include "Sound/SoundCue.h"
 #include "Sound/Soundbase.h"
 #include "Components/AudioComponent.h"*/
 
-osu::Beatmap beats(ToU);
+
+osu::Beatmap beats(supersonic);
 // Sets default values for this component's properties
 ULevelGenerator::ULevelGenerator()
-{
+{	
+	// static ConstructorHelpers::FObjectFinder<USoundWave> supersonic(TEXT("/Script/Engine.SoundWave'/Game/Songs/supersonic.supersonic'"));
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
@@ -34,6 +40,39 @@ ULevelGenerator::ULevelGenerator()
 			);
 		}
 	}*/
+	//srand(time(NULL));
+	ss = LoadObject<USoundWave>(NULL, TEXT("/Script/Engine.SoundWave'/Game/Songs/supersonic.supersonic'"));
+	// tu = LoadObject<USoundWave>(NULL, TEXT("/Script/Engine.SoundWave'/Game/Songs/ToU.ToU'"));
+
+	// FString fsupersonic = FString(supersonic.c_str());
+	
+	FString ToUpath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/ToU.ToU'"));
+	FString supersonicname = FString(TEXT("supersonic"));
+	FString ToUname = FString(TEXT("ToU"));
+	FString testname = FString(TEXT("test"));
+	FString supersonicpath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/supersonic.supersonic'"));
+	
+
+	songlist.Add(testname, supersonicpath);
+	songlist.Add(supersonicname, supersonicpath);
+	songlist.Add(ToUname, ToUpath);
+	// songlist[fToU] = tu;
+
+	
+	//auto it = songlist.begin();
+	//std::advance(it, rand() % songlist.size());
+	//std::string rand = it->first;
+	for (auto kv : songlist) {
+		UE_LOG(LogTemp, Warning, TEXT("The songname is: %s"), *kv.Key);
+	}
+	UE_LOG(LogTemp, Warning, TEXT("songname size is: %d"), songlist.Num());
+	for (auto kv : songlist) {
+		songlistArray.Add(*kv.Key);
+	}
+	for (auto kv : songlistArray) {
+		UE_LOG(LogTemp, Warning, TEXT("The songname is: %s"), *kv);
+	}
+	
 }
 
 AActor *ULevelGenerator::ConstructPlatform(float xpos, int time)
@@ -207,11 +246,11 @@ void ULevelGenerator::BeginPlay()
 	Super::BeginPlay();
 
 	// play music from specified path
-	Sound = LoadObject<USoundBase>(NULL, TEXT("/Game/Songs/ToU"));
 
+	song = LoadObject<USoundWave>(NULL, *songlist[chosensong]);
 	timeMod = walkSpeed / 1000.0f;
 	GeneratePlatforms();
-	//UGameplayStatics::PlaySound2D(this, Sound);
+	UGameplayStatics::PlaySound2D(this, song);
 	timer = 0;
 }
 
@@ -295,11 +334,11 @@ void ULevelGenerator::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 				}
 			}
 
-			if(!beats.HitObjects()[index].isHit()){
-			beats.HitObjects()[index].setHit(true);
-			jump = true;
-			UE_LOG(LogTemp, Warning, TEXT("jump set to true"));
-			}
+			//if(!beats.HitObjects()[index].isHit()){
+			//beats.HitObjects()[index].setHit(true);
+			//jump = true;
+			//UE_LOG(LogTemp, Warning, TEXT("jump set to true"));
+			//}
 			// FVector PlayerVelocity(0, 0, 0);
 			// FVector currentLocation(0, currentEZ, 0);
 			// FVector nextLocation(0, nextSZ, 0);

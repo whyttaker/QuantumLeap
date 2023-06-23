@@ -2,6 +2,9 @@
 
 #pragma once
 //#include "osu.hpp"
+#include <map>
+#include <time.h>
+#include <string>
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
 #include "Components/AudioComponent.h"
@@ -28,13 +31,24 @@ public:
 	float playerY = 0;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Attributes)
 	float jumpZVelocity = 0;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Attributes)
+	FString chosensong = FString(TEXT("ToU"));
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attributes)
+	TMap<FString, FString> songlist;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FString> songlistArray;
 	UPROPERTY(EditAnywhere, Category = "Music")
-	class USoundBase *Sound;
+	class USoundBase *ss;
+	UPROPERTY(EditAnywhere, Category = "Music")
+	class USoundBase *tu;
+	UPROPERTY(EditAnywhere, Category = "Music")
+	class USoundBase *song;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Attributes)
 	bool jump = false;
 
 	ULevelGenerator();
-
+	void GeneratePlatforms();
 	IOnlineSessionPtr OnlineSessionInterface;
 
 protected:
@@ -47,7 +61,6 @@ private:
 	float timer = 0;
 	AActor *ConstructPlatform(float xpos, int time);
 	AActor *ConstructWall(float xpos, int time, int length, int type);
-	void GeneratePlatforms();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 	std::vector<AActor *> platforms;
 	float platformYSpacing = 0;
