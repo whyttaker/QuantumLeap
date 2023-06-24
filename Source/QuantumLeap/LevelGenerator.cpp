@@ -7,6 +7,17 @@
 #include "loveletters.hpp"
 #include "overthinker.hpp"
 #include "supersonic.hpp"
+
+#include "alienboy.hpp"
+#include "breakfree.hpp"
+#include "fight.hpp"
+#include "hyperreal.hpp"
+
+#include "light.hpp"
+#include "middle.hpp"
+#include "run.hpp"
+
+
 #include "PlatformActor.h"
 #include "WallActor.h"
 #include "spinner.h"
@@ -20,6 +31,21 @@
 
 FString supersonicmap = FString(supersonic.c_str());
 FString toumap = FString(ToU.c_str());
+FString overthinkermap = FString(overthinker.c_str());
+FString helixmap = FString(helix.c_str());
+FString memphismap = FString(memphis.c_str());
+
+FString lovelettersmap = FString(loveletters.c_str());
+FString alienboymap = FString(alienboy.c_str());
+FString breakfreemap = FString(breakfree.c_str());
+FString fightmap = FString(fight.c_str());
+FString hyperrealmap = FString(hyperreal.c_str());
+FString lightmap = FString(light.c_str());
+FString middlemap = FString(middle.c_str());
+FString runmap = FString(run.c_str());
+
+
+
 osu::Beatmap beats(supersonic); //default map to be created
 
 // Sets default values for this component's properties
@@ -54,14 +80,67 @@ ULevelGenerator::ULevelGenerator()
 	FString toupath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/ToU.ToU'"));
 	FSongStruct tousong = FSongStruct(touname, toupath, toumap);
 
+	// Overthinker - ???
+	FString overthinkername = FString(TEXT("overthinker"));
+	FString overthinkerpath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/overthinker.overthinker'"));
+	FSongStruct overthinkersong = FSongStruct(overthinkername, overthinkerpath, overthinkermap);
 
-	FString testname = FString(TEXT("test"));
+	// Helix - Flume - needs to add skip functionality
+	//FString helixname = FString(TEXT("helix"));
+	//FString helixpath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/helix.helix'"));
+	//FSongStruct helixsong = FSongStruct(helixname, helixpath, helixmap);
 	
+	FString memphisname = FString(TEXT("memphis"));
+	FString memphispath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/memphis.memphis'"));
+	FSongStruct memphissong = FSongStruct(memphisname, memphispath, memphismap);
 	
-	
+
+	FString breakfreename = FString(TEXT("breakfree"));
+	FString breakfreepath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/breakfree.breakfree'"));
+	FSongStruct breakfreesong = FSongStruct(breakfreename, breakfreepath, breakfreemap);
+
+	FString alienboyname = FString(TEXT("alienboy"));
+	FString alienboypath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/alienboy.alienboy'"));
+	FSongStruct alienboysong = FSongStruct(alienboyname, alienboypath, alienboymap);
+
+	FString fightname = FString(TEXT("fight"));
+	FString fightpath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/fight.fight'"));
+	FSongStruct fightsong = FSongStruct(fightname, fightpath, fightmap);
+
+	FString hyperrealname = FString(TEXT("hyperreal"));
+	FString hyperrealpath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/hyperreal.hyperreal'"));
+	FSongStruct hyperrealsong = FSongStruct(hyperrealname, hyperrealpath, hyperrealmap);
+
+	FString lightname = FString(TEXT("light"));
+	FString lightpath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/light.light'"));
+	FSongStruct lightsong = FSongStruct(lightname, lightpath, lightmap);
+
+	FString lovelettersname = FString(TEXT("loveletters"));
+	FString loveletterspath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/loveletters.loveletters'"));
+	FSongStruct loveletterssong = FSongStruct(lovelettersname, loveletterspath, lovelettersmap);
+
+	FString middlename = FString(TEXT("middle"));
+	FString middlepath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/middle.middle'"));
+	FSongStruct middlesong = FSongStruct(middlename, middlepath, middlemap);
+
+	FString runname = FString(TEXT("run"));
+	FString runpath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/run.run'"));
+	FSongStruct runsong = FSongStruct(runname, runpath, runmap);
+
 	songStructArray.Add(supersonicsong);
 	songStructArray.Add(tousong);
+	songStructArray.Add(overthinkersong);
+	// songStructArray.Add(helixsong);
+	songStructArray.Add(memphissong);
 
+	songStructArray.Add(breakfreesong);
+	songStructArray.Add(alienboysong);
+	songStructArray.Add(fightsong);
+	songStructArray.Add(hyperrealsong);
+	songStructArray.Add(lightsong);
+	songStructArray.Add(loveletterssong);
+	songStructArray.Add(middlesong);
+	songStructArray.Add(runsong);
 	
 }
 
