@@ -13,6 +13,41 @@
 #include "Interfaces/OnlineSessionInterface.h"
 #include "LevelGenerator.generated.h"
 
+
+USTRUCT(BlueprintType)
+struct FSongStruct
+{
+	GENERATED_BODY()
+	FORCEINLINE FSongStruct();
+	explicit FORCEINLINE FSongStruct(FString n, FString p, FString m);
+	bool FORCEINLINE operator==(const FString& n);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Song Variables")
+	FString name;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Song Variables")
+	FString path;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Song Variables")
+	FString map;
+
+	
+
+};
+
+FORCEINLINE FSongStruct::FSongStruct()
+{
+	
+}
+
+FORCEINLINE FSongStruct::FSongStruct(FString n, FString p, FString m) : name(n), path(p), map(m)
+{
+}
+
+bool FORCEINLINE FSongStruct::operator==(const FString& n) {
+	return name == n;
+}
+
+
+
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class QUANTUMLEAP_API ULevelGenerator : public USceneComponent
 {
@@ -34,14 +69,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Attributes)
 	FString chosensong = FString(TEXT("ToU"));
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attributes)
-	TMap<FString, FString> songlist;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<FString> songlistArray;
-	UPROPERTY(EditAnywhere, Category = "Music")
-	class USoundBase *ss;
-	UPROPERTY(EditAnywhere, Category = "Music")
-	class USoundBase *tu;
+	TArray<FSongStruct> songStructArray;
+
+
 	UPROPERTY(EditAnywhere, Category = "Music")
 	class USoundBase *song;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Attributes)
@@ -68,3 +99,5 @@ private:
 	UAudioComponent *MusicAudioComponent;
 	bool left = false;
 };
+
+

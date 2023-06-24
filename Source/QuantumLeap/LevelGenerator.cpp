@@ -18,8 +18,10 @@
 #include "Sound/Soundbase.h"
 #include "Components/AudioComponent.h"*/
 
+FString supersonicmap = FString(supersonic.c_str());
+FString toumap = FString(ToU.c_str());
+osu::Beatmap beats(supersonic); //default map to be created
 
-osu::Beatmap beats(supersonic);
 // Sets default values for this component's properties
 ULevelGenerator::ULevelGenerator()
 {	
@@ -40,38 +42,26 @@ ULevelGenerator::ULevelGenerator()
 			);
 		}
 	}*/
-	//srand(time(NULL));
-	ss = LoadObject<USoundWave>(NULL, TEXT("/Script/Engine.SoundWave'/Game/Songs/supersonic.supersonic'"));
-	// tu = LoadObject<USoundWave>(NULL, TEXT("/Script/Engine.SoundWave'/Game/Songs/ToU.ToU'"));
 
-	// FString fsupersonic = FString(supersonic.c_str());
-	
-	FString ToUpath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/ToU.ToU'"));
+
+	// Supersonic - Skrillex
 	FString supersonicname = FString(TEXT("supersonic"));
-	FString ToUname = FString(TEXT("ToU"));
-	FString testname = FString(TEXT("test"));
 	FString supersonicpath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/supersonic.supersonic'"));
-	
+	FSongStruct supersonicsong = FSongStruct(supersonicname, supersonicpath, supersonicmap);
 
-	songlist.Add(testname, supersonicpath);
-	songlist.Add(supersonicname, supersonicpath);
-	songlist.Add(ToUname, ToUpath);
-	// songlist[fToU] = tu;
+	// ToU - Skrillex
+	FString touname = FString(TEXT("ToU"));
+	FString toupath = FString(TEXT("/Script/Engine.SoundWave'/Game/Songs/ToU.ToU'"));
+	FSongStruct tousong = FSongStruct(touname, toupath, toumap);
 
+
+	FString testname = FString(TEXT("test"));
 	
-	//auto it = songlist.begin();
-	//std::advance(it, rand() % songlist.size());
-	//std::string rand = it->first;
-	for (auto kv : songlist) {
-		UE_LOG(LogTemp, Warning, TEXT("The songname is: %s"), *kv.Key);
-	}
-	UE_LOG(LogTemp, Warning, TEXT("songname size is: %d"), songlist.Num());
-	for (auto kv : songlist) {
-		songlistArray.Add(*kv.Key);
-	}
-	for (auto kv : songlistArray) {
-		UE_LOG(LogTemp, Warning, TEXT("The songname is: %s"), *kv);
-	}
+	
+	
+	songStructArray.Add(supersonicsong);
+	songStructArray.Add(tousong);
+
 	
 }
 
@@ -244,10 +234,18 @@ void ULevelGenerator::GeneratePlatforms()
 void ULevelGenerator::BeginPlay()
 {
 	Super::BeginPlay();
+	
 
+	auto* csong = songStructArray.FindByKey(chosensong);
+	FString sname = csong->name;
+	FString spath = csong->path;
+	FString smap = csong->map;
+
+	beats = osu::Beatmap(std::string(TCHAR_TO_UTF8(*smap)));
 	// play music from specified path
 
-	song = LoadObject<USoundWave>(NULL, *songlist[chosensong]);
+	// song = LoadObject<USoundWave>(NULL, *songlist[chosensong]);
+	song = LoadObject<USoundWave>(NULL, *spath);
 	timeMod = walkSpeed / 1000.0f;
 	GeneratePlatforms();
 	UGameplayStatics::PlaySound2D(this, song);
